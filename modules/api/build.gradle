@@ -1,0 +1,16 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation project(':modules:domain')
+    implementation project(':modules:storage')
+    implementation project(':modules:openapi-api-client')
+}
+
+jar {
+    enabled = false
+}
+
+bootJar {
+    enabled = true
+}
