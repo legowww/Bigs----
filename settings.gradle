@@ -1,0 +1,6 @@
+rootProject.name = 'root'
+
+include 'modules:api'
+include 'modules:domain'
+include 'modules:storage'
+include 'modules:openapi-api-client'
