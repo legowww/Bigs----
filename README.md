@@ -36,6 +36,9 @@ GET http://localhost:8080/api/v1/weather-forecasts?nx=62&ny=130&baseDate=2024050
 ```
 **응답**
 ```
+HTTP/1.1 200 
+Content-Type: application/json
+
 {
   "status": 200,
   "data": {
