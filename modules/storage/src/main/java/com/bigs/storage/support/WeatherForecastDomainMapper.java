@@ -1,4 +1,4 @@
-package com.bigs.storage.mapper;
+package com.bigs.storage.support;
 
 import com.bigs.domain.weatherforecast.Category;
 import com.bigs.domain.weatherforecast.WeatherForecastContent;
@@ -8,7 +8,7 @@ import com.bigs.storage.weatherforecast.WeatherForecastIdentifierEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WeatherForecastMapper {
+public class WeatherForecastDomainMapper {
 
     public WeatherForecastIdentifierEntity toEntity(
             WeatherForecastIdentifier identifier
@@ -31,6 +31,17 @@ public class WeatherForecastMapper {
                 Category.from(content.category()),
                 content.fcstValue(),
                 weatherForecastIdentifierId
+        );
+    }
+
+    public WeatherForecastContent toDomain(
+            WeatherForecastContentEntity entity
+    ) {
+        return new WeatherForecastContent(
+                entity.getFcstDate(),
+                entity.getFcstTime(),
+                entity.getCategory().toString(),
+                entity.getFcstValue()
         );
     }
 }
