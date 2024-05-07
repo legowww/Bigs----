@@ -5,11 +5,13 @@ import com.bigs.domain.weatherforecast.WeatherForecastApiClient;
 import com.bigs.domain.weatherforecast.WeatherForecastContent;
 import com.bigs.weatherapiclient.openapi.config.OpenApiProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,10 +29,8 @@ public class VilageFcstApiClient implements WeatherForecastApiClient {
             String baseDate,
             String baseTime
     ) {
-        URI url = getUri(nx, ny, baseDate, baseTime);
-        String result = restTemplate.getForObject(url, String.class);
-
-        return mapper.mapFrom(result);
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(getUri(nx, ny, baseDate, baseTime), String.class);
+        return mapper.mapFrom(forEntity.getBody());
     }
 
     private URI getUri(
@@ -39,8 +39,8 @@ public class VilageFcstApiClient implements WeatherForecastApiClient {
             String baseDate,
             String baseTime
     ) {
-        URI url = UriComponentsBuilder
-                .fromHttpUrl(properties.getVilageFcst().url())
+        return UriComponentsBuilder
+                .fromUriString(properties.getVilageFcst().url())
                 .queryParam("serviceKey", properties.getVilageFcst().serviceKey())
                 .queryParam("pageNo", "1")
                 .queryParam("numOfRows", "1000")
@@ -49,9 +49,7 @@ public class VilageFcstApiClient implements WeatherForecastApiClient {
                 .queryParam("ny", ny)
                 .queryParam("base_date", baseDate)
                 .queryParam("base_time", baseTime)
-                .build()
+                .build(true)
                 .toUri();
-
-        return url;
     }
 }

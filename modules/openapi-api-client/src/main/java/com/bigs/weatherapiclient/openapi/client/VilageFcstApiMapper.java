@@ -13,23 +13,29 @@ import java.util.List;
 public class VilageFcstApiMapper {
 
     public List<WeatherForecastContent> mapFrom(String result) {
-        JSONObject json = new JSONObject(result);
-        JSONObject response = (JSONObject) json.get("response");
-        JSONObject body = (JSONObject) response.get("body");
-        JSONObject items = (JSONObject) body.get("items");
-        JSONArray item = (JSONArray) items.get("item");
 
-        List<WeatherForecastContent> weatherForecastContents = new ArrayList<>();
-        for (int i = 0; i < item.length(); ++i) {
-            JSONObject it = (JSONObject) item.get(i);
-            String category = it.get("category").toString();
-            String fcstDate = it.get("fcstDate").toString();
-            String fcstTime = it.get("fcstTime").toString();
-            String fcstValue = it.get("fcstValue").toString();
+        try {
+            JSONObject json = new JSONObject(result);
+            JSONObject response = (JSONObject) json.get("response");
+            JSONObject body = (JSONObject) response.get("body");
+            JSONObject items = (JSONObject) body.get("items");
+            JSONArray item = (JSONArray) items.get("item");
 
-            weatherForecastContents.add(new WeatherForecastContent(fcstDate, fcstTime, category, fcstValue));
+            List<WeatherForecastContent> weatherForecastContents = new ArrayList<>();
+            for (int i = 0; i < item.length(); ++i) {
+                JSONObject it = (JSONObject) item.get(i);
+                String category = it.get("category").toString();
+                String fcstDate = it.get("fcstDate").toString();
+                String fcstTime = it.get("fcstTime").toString();
+                String fcstValue = it.get("fcstValue").toString();
+
+                weatherForecastContents.add(new WeatherForecastContent(fcstDate, fcstTime, category, fcstValue));
+            }
+
+            return weatherForecastContents;
+
+        } catch (Exception exception) {
+            throw new RuntimeException("단기예보API 호출에 실패하였습니다. 다시 호출해주세요");
         }
-
-        return weatherForecastContents;
     }
 }
