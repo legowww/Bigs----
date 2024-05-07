@@ -12,18 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
 
 import java.net.URI;
 
 @RequiredArgsConstructor
-@RequestMapping("/api")
 @RestController
 public class WeatherForecastController {
 
     private final WeatherForecastService weatherForecastService;
 
-    @GetMapping("/v1/weather-forecasts")
+    @GetMapping("/api/v1/weather-forecasts")
     public ResponseEntity<ApiResponse<WeatherForecastFindResponse>> findWeatherForecast(
             @RequestParam Long nx,
             @RequestParam Long ny,
@@ -40,7 +38,7 @@ public class WeatherForecastController {
         return ResponseEntity.ok(ApiResponse.ok(WeatherForecastFindResponse.of(weatherForecast)));
     }
 
-    @PostMapping("/v1/weather-forecasts")
+    @PostMapping("/api/v1/weather-forecasts")
     public ResponseEntity<ApiResponse<WeatherForecastSaveResponse>> saveWeatherForecast(
         @Validated @RequestBody WeatherForecastSaveRequest request
     ) {
