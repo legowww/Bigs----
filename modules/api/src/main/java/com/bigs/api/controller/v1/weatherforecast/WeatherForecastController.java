@@ -1,5 +1,7 @@
 package com.bigs.api.controller.v1.weatherforecast;
 
+import com.bigs.api.controller.v1.weatherforecast.request.WeatherForecastSaveRequest;
+import com.bigs.api.controller.v1.weatherforecast.response.WeatherForecastSaveResponse;
 import com.bigs.api.global.response.ApiResponse;
 import com.bigs.domain.weatherforecast.WeatherForecast;
 import com.bigs.domain.weatherforecast.WeatherForecastIdentifier;
@@ -7,6 +9,7 @@ import com.bigs.domain.weatherforecast.WeatherForecastService;
 import com.bigs.api.controller.v1.weatherforecast.response.WeatherForecastFindResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
@@ -28,18 +31,22 @@ public class WeatherForecastController {
             @RequestParam String baseTime
     ) {
         WeatherForecast weatherForecast = weatherForecastService.find(WeatherForecastIdentifier.of(nx, ny, baseDate, baseTime));
+
+        if (weatherForecast.weatherForecastContents().isEmpty()) {
+            return ResponseEntity.noContent()
+                    .build();
+        }
+
         return ResponseEntity.ok(ApiResponse.ok(WeatherForecastFindResponse.of(weatherForecast)));
     }
 
     @PostMapping("/v1/weather-forecasts")
-    public ResponseEntity<ApiResponse<Void>> saveWeatherForecast(
-            @RequestParam Long nx,
-            @RequestParam Long ny,
-            @RequestParam String baseDate,
-            @RequestParam String baseTime
+    public ResponseEntity<ApiResponse<WeatherForecastSaveResponse>> saveWeatherForecast(
+        @Validated @RequestBody WeatherForecastSaveRequest request
     ) {
-        weatherForecastService.save(WeatherForecastIdentifier.of(nx, ny, baseDate, baseTime));
-        return ResponseEntity.created(getUri(nx, ny, baseDate, baseTime)).body(ApiResponse.created(null));
+        weatherForecastService.save(WeatherForecastIdentifier.of(request.nx(), request.ny(), request.baseDate(), request.baseTime()));
+        return ResponseEntity.created(getUri(request.nx(), request.ny(), request.baseDate(), request.baseTime()))
+                .body(ApiResponse.created(WeatherForecastSaveResponse.of(request.nx(), request.ny(), request.baseDate(), request.baseTime())));
     }
 
     private URI getUri(Long nx, Long ny, String baseDate, String baseTime) {
@@ -52,12 +59,4 @@ public class WeatherForecastController {
                 .build()
                 .toUri();
     }
-
-
-//    @GetMapping("/a")
-//    public ResponseEntity<WeatherForecastFindResponse> test() {
-////        WeatherForecastFindResponse response = weatherForecastService.find(new WeatherForecastTarget("62", "130", "20240504", "0500"));
-//
-//        return ResponseEntity.ok(response);
-//    }
 }
