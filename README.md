@@ -6,8 +6,15 @@
 
 **요청**
 ```
-GET http://localhost:8080/api/v1/weather-forecasts?nx=62&ny=130&baseDate=20240507&baseTime=0500
-```
+POST http://localhost:8080/api/v1/weather-forecasts
+Content-Type: application/json
+
+{
+  "nx": 62,
+  "ny": 130,
+  "baseDate": "20240507",
+  "baseTime": "0500"
+}```
 
 **응답**
 ```
