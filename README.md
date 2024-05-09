@@ -14,7 +14,8 @@ Content-Type: application/json
   "ny": 130,
   "baseDate": "20240507",
   "baseTime": "0500"
-}```
+}
+```
 
 **응답**
 ```
